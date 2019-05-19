@@ -1,5 +1,5 @@
 <?php
-  
+
   if ($_POST['KmlGpx'] == "gpx_track") {
     header('Content-type: application/gpx+xml');
     header("Content-Disposition: attachment; filename=\"" . $_POST['filename']. ".t.gpx");  
@@ -15,6 +15,6 @@
   } else {
     echo "<h1>ERROR: Data type not recognised. Please contact Neil to get it fixed.</h1>";
   }
-  
-  // echo "<pre>" . str_replace("<", "&lt;", print_r($_POST, 1)) . "</pre>\n";
+
+  //  echo "<pre>" . str_replace("<", "&lt;", print_r($_POST, 1)) . "</pre>\n";
 ?>
