@@ -9,7 +9,7 @@
     var mymap;
 
     function GetMap() {
-        mymap = new Microsoft.Maps.Map('#myMap', { credentials: 'ArnZSzoMSvXE9JZUGWaaqQ55jl4eVWlsA4Rzt2FY6mU0diTVUGXY10nB5SdMzRzE' });
+        mymap = new Microsoft.Maps.Map('#myMap', { credentials: 'Put your own Bing Maps Key here' });
         
         // viewchangestart, viewchange, viewchangeend, click, dblclick, rightclick
         // mousedown, mouseout, mouseover, mouseup, mousewheel, maptypechanged
@@ -57,26 +57,40 @@
         highlight('but_info');
     }
     
-    function pad(num, size) {
+    function pad(num, size) {    //    input 7    output 007     for example
       var s = num+"";
       while (s.length < size) s = "0" + s;
       return s;
     }
     
-    function saveGPXtrack() {
+    function hideMap() {
       document.getElementById("myMap").style.display        = "none";
       document.getElementById("but_help").style.display     = "none";
       document.getElementById("but_info").style.display     = "none";
       document.getElementById("but_GPXtrack").style.display = "none";
-    //document.getElementById("but_GPXroute").style.display = "none";
+      document.getElementById("but_GPXroute").style.display = "none";
       document.getElementById("but_KML").style.display      = "none";
       document.getElementById("myDat").style.display        = "block";
+    }
+    
+    function showMap() {
+      document.getElementById("myMap").style.display        = "block";
+      document.getElementById("but_help").style.display     = "inline";
+      document.getElementById("but_info").style.display     = "inline";
+      document.getElementById("but_GPXtrack").style.display = "inline";
+      document.getElementById("but_GPXroute").style.display = "inline";
+      document.getElementById("but_KML").style.display      = "inline";
+      document.getElementById("myDat").style.display        = "none";
+    }
+    
+    function saveGPXtrack() {
+      hideMap();
       
       var lineData = line.getLocations();
       
       var length = getWalkLength(lineData);
           length = Math.round(length  * 100) / 100;
-          length = "<b>Walk Length: </b>" + length + " km" + " - " + Math.round(0.621371 * length * 100) / 100 + " miles.";
+          length = "<b>Distance: </b>" + length + " km" + " &nbsp; " + Math.round(0.621371 * length * 100) / 100 + " miles.";
           // console.log(length);
       
       var date = new Date();
@@ -141,9 +155,9 @@
             var lat = Math.round(lineData[ii].latitude  * 1000000) / 1000000;
             var lon = Math.round(lineData[ii].longitude * 1000000) / 1000000;
             
-            gpxtxt += '      <trkpt lat="' + lat + '" lon="' + lon + '">\n';
-            gpxtxt += '        <ele>0.000000</ele>\n';
-            gpxtxt += '      </trkpt>\n';
+            gpxtxt += '      <trkpt lat="' + lat + '" lon="' + lon + '"></trkpt>\n';
+//          gpxtxt += '        <ele>0.000000</ele>\n';
+//          gpxtxt += '      </trkpt>\n';
           }
           
           gpxtxt += '    </trkseg>\n';
@@ -161,20 +175,14 @@
       document.getElementById('filename').value       =  dateString;
     }
     
-/*   function saveGPXroute() {
-      document.getElementById("myMap").style.display        = "none";
-      document.getElementById("but_help").style.display     = "none";
-      document.getElementById("but_info").style.display     = "none";
-      document.getElementById("but_GPXtrack").style.display = "none";
-    //document.getElementById("but_GPXroute").style.display = "none";
-      document.getElementById("but_KML").style.display      = "none";
-      document.getElementById("myDat").style.display        = "block";
+    function saveGPXroute() {
+      hideMap();
       
       var lineData = line.getLocations();
       
       var length = getWalkLength(lineData);
           length = Math.round(length  * 100) / 100;
-          length = "<b>Walk Length: </b>" + length + " km" + " - " + Math.round(0.621371 * length * 100) / 100 + " miles.";
+          length = "<b>Distance: </b>" + length + " km" + " &nbsp; " + Math.round(0.621371 * length * 100) / 100 + " miles.";
           // console.log(length);
       
       var date = new Date();
@@ -191,38 +199,42 @@
       var lat;
       var lon;
       
-      var startlat = Math.round(lineData[0].latitude * 1000000) / 1000000;
+      var startlat = Math.round(lineData[0].latitude  * 1000000) / 1000000;
       var startlon = Math.round(lineData[0].longitude * 1000000) / 1000000;
-      
+
       var endlat   = Math.round(lineData[lineData.length - 1].latitude * 1000000) / 1000000;
       var endlon   = Math.round(lineData[lineData.length - 1].longitude * 1000000) / 1000000;
       
+      var grStart = convertlatlonToGR(startlat, startlon); 
+      var grEnd   = convertlatlonToGR(endlat,   endlon);
+      
       var gpxtxt = "";
-          gpxtxt += '<?xml version="1.0" encoding="UTF-8"?>\n';
-          gpxtxt += '<gpx version="1.0" creator="Waveney Ramblers - http://waveneyramblers.org.uk/gpx_maker.php?lat=52.4&lon=1.5" xmlns="http://www.topografix.com/GPX/1/0>"\n';
-          gpxtxt += '  <time>' + dateString + '</time>\n';    // <time>2019-04-10T17:16:02.153Z</time>
+          gpxtxt += '<?xml version=\'1.0\' encoding=\'ISO-8859-1\'?>\n';
+          gpxtxt += '<gpx xmlns=\'http://www.topografix.com/GPX/1/1\' version=\'1.1\' creator=\'Waveney Ramblers - waveneyramblers.org.uk\'\n';
+          gpxtxt += 'xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\'\n';
+          gpxtxt += 'xsi:schemaLocation=\'http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\'>\n';
           gpxtxt += '  <wpt lat="' + startlat + '" lon="' + startlon + '">\n';
           gpxtxt += '    <ele>0.000000</ele>\n';
-          gpxtxt += '    <name>Start</name>\n';
-          gpxtxt += '    <cmt>Start</cmt>\n';
-          gpxtxt += '    <desc>Start</desc>\n';
+          gpxtxt += '    <name>Start, ' + grStart + '</name>\n';
+          gpxtxt += '    <cmt>Start, '  + grStart + '</cmt>\n';
+          gpxtxt += '    <desc>Start, ' + grStart + '</desc>\n';
           gpxtxt += '  </wpt>\n';
           gpxtxt += '  <wpt lat="' + endlat + '" lon="' + endlon + '">\n';
           gpxtxt += '    <ele>0.000000</ele>\n';
-          gpxtxt += '    <name>End</name>\n';
-          gpxtxt += '    <cmt>End</cmt>\n';
-          gpxtxt += '    <desc>End</desc>\n';
+          gpxtxt += '    <name>End, ' + grEnd + '</name>\n';
+          gpxtxt += '    <cmt>End, '  + grEnd + '</cmt>\n';
+          gpxtxt += '    <desc>End, ' + grEnd + '</desc>\n';
           gpxtxt += '  </wpt>\n';
           gpxtxt += '  <rte>\n';
-          gpxtxt += '    <name>Route</name>\n';
-
+          gpxtxt += '    <name><![CDATA[MyRouteEditMe]]></name>\n';
+          gpxtxt += '    <type><![CDATA[Route]]></type>\n';
+          
           for (ii = 0; ii < lineData.length; ii++) {
             var lat = Math.round(lineData[ii].latitude  * 1000000) / 1000000;
             var lon = Math.round(lineData[ii].longitude * 1000000) / 1000000;
-
-            gpxtxt += '    <rtept lat="' + lat + '" lon="' + lon + '"><name>RPT' + pad(ii, 3) + '</name></rtept>\n';            
+            gpxtxt += '    <rtept lat="' + lat + '" lon="' + lon + '"><name>rp_' + pad(ii, 3) + '</name></rtept>\n';
           }
-          
+                   
           gpxtxt += '  </rte>\n';
           gpxtxt += '</gpx>\n';
           
@@ -235,22 +247,16 @@
       document.getElementById('length').value         =  length;
       document.getElementById('showLength').innerHTML =  length;
       document.getElementById('filename').value       =  dateString;
-    }    */
+    }
     
     function saveKML() {
-      document.getElementById("myMap").style.display        = "none";
-      document.getElementById("but_help").style.display     = "none";
-      document.getElementById("but_info").style.display     = "none";
-      document.getElementById("but_GPXtrack").style.display = "none";
-    //document.getElementById("but_GPXroute").style.display = "none";
-      document.getElementById("but_KML").style.display      = "none";
-      document.getElementById("myDat").style.display        = "block";
+      hideMap();
 
       var lineData = line.getLocations();
       
       var length = getWalkLength(lineData);
           length = Math.round(length  * 100) / 100;
-          length = "<b>Walk Length: </b>" + length + " km" + " - " + Math.round(0.621371 * length * 100) / 100 + " miles.";
+          length = "<b>Distance: </b>" + length + " km" + " &nbsp; " + Math.round(0.621371 * length * 100) / 100 + " miles.";
           // console.log(length);
       
       var date = new Date();
@@ -280,91 +286,95 @@
           kmltxt  += '<?xml version="1.0" encoding="UTF-8"?>\n';
           kmltxt  += '<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">\n';
           kmltxt  += '<Document>\n';
-          kmltxt  += '\t<name>' + dateString + '.kml</name>\n';
-          kmltxt  += '\t<Style id="waypoint_n">\n';
-		  kmltxt  += '\t\t<IconStyle>\n';
-		  kmltxt  += '\t\t\t<Icon>\n';
-          kmltxt  += '\t\t\t\t<href>http://maps.google.com/mapfiles/kml/pal4/icon61.png</href>\n';
-          kmltxt  += '\t\t\t</Icon>\n';
-          kmltxt  += '\t\t</IconStyle>\n';
-          kmltxt  += '\t</Style>\n';
-          kmltxt  += '\t<StyleMap id="waypoint">\n';
-          kmltxt  += '\t\t<Pair>\n';
-          kmltxt  += '\t\t\t<key>normal</key>\n';
-          kmltxt  += '\t\t\t<styleUrl>#waypoint_n</styleUrl>\n';
-          kmltxt  += '\t\t</Pair>\n';
-          kmltxt  += '\t\t<Pair>\n';
-          kmltxt  += '\t\t\t<key>highlight</key>\n';
-          kmltxt  += '\t\t\t<styleUrl>#waypoint_h</styleUrl>\n';
-          kmltxt  += '\t\t</Pair>\n';
-          kmltxt  += '\t</StyleMap>\n';
-          kmltxt  += '\t<Style id="lineStyle1">\n';
-          kmltxt  += '\t\t<LineStyle>\n';
-          kmltxt  += '\t\t\t<color>ffff0000</color>\n';
-          kmltxt  += '\t\t\t<width>5</width>\n';
-          kmltxt  += '\t\t</LineStyle>\n';
-          kmltxt  += '\t</Style>\n';
-          kmltxt  += '\t<StyleMap id="lineStyle">\n';
-          kmltxt  += '\t\t<Pair>\n';
-          kmltxt  += '\t\t\t<key>normal</key>\n';
-          kmltxt  += '\t\t\t<styleUrl>#lineStyle1</styleUrl>\n';
-          kmltxt  += '\t\t</Pair>\n';
-          kmltxt  += '\t\t<Pair>\n';
-          kmltxt  += '\t\t\t<key>highlight</key>\n';
-          kmltxt  += '\t\t\t<styleUrl>#lineStyle0</styleUrl>\n';
-          kmltxt  += '\t\t</Pair>\n';
-          kmltxt  += '\t</StyleMap>\n';
-          kmltxt  += '\t<Style id="lineStyle0">\n';
-          kmltxt  += '\t\t<LineStyle>\n';
-          kmltxt  += '\t\t\t<color>ffff0000</color>\n';
-          kmltxt  += '\t\t\t<width>5</width>\n';
-          kmltxt  += '\t\t</LineStyle>\n';
-          kmltxt  += '\t</Style>\n';
-          kmltxt  += '\t<Style id="waypoint_h">\n';
-          kmltxt  += '\t\t<IconStyle>\n';
-          kmltxt  += '\t\t\t<scale>1.2</scale>\n';
-          kmltxt  += '\t\t\t<Icon>\n';
-          kmltxt  += '\t\t\t\t<href>http://maps.google.com/mapfiles/kml/pal4/icon61.png</href>\n';
-          kmltxt  += '\t\t\t</Icon>\n';
-          kmltxt  += '\t\t</IconStyle>\n';
-          kmltxt  += '\t</Style>\n';          
-          kmltxt  += '\t<Folder>\n';
-          kmltxt  += '\t\t<name>' + dateString + '</name>\n';
-          kmltxt  += '\t\t<open>1</open>\n';
-          kmltxt  += '\t\t<Placemark>\n';
-          kmltxt  += '\t\t\t<name>Path Edit Me</name>\n';
-          kmltxt  += '\t\t\t<styleUrl>#lineStyle</styleUrl>\n';
-          kmltxt  += '\t\t\t<LineString>\n';
-          kmltxt  += '\t\t\t\t<tessellate>1</tessellate>\n';
-          kmltxt  += '\t\t\t\t<coordinates>\n';
+          kmltxt  += '  <name>' + dateString + '.kml</name>\n';
+
+          kmltxt  += '  <Style id="waypoint_n">\n';
+		  kmltxt  += '    <IconStyle>\n';
+		  kmltxt  += '      <Icon>\n';
+          kmltxt  += '        <href>http://maps.google.com/mapfiles/kml/pal4/icon61.png</href>\n';
+          kmltxt  += '      </Icon>\n';
+          kmltxt  += '    </IconStyle>\n';
+          kmltxt  += '  </Style>\n';
+          kmltxt  += '  <Style id="waypoint_h">\n';
+          kmltxt  += '    <IconStyle>\n';
+          kmltxt  += '      <scale>1.2</scale>\n';
+          kmltxt  += '      <Icon>\n';
+          kmltxt  += '        <href>http://maps.google.com/mapfiles/kml/pal4/icon61.png</href>\n';
+          kmltxt  += '      </Icon>\n';
+          kmltxt  += '    </IconStyle>\n';
+          kmltxt  += '  </Style>\n';          
+          kmltxt  += '  <StyleMap id="waypoint">\n';
+          kmltxt  += '    <Pair>\n';
+          kmltxt  += '      <key>normal</key>\n';
+          kmltxt  += '      <styleUrl>#waypoint_n</styleUrl>\n';
+          kmltxt  += '    </Pair>\n';
+          kmltxt  += '    <Pair>\n';
+          kmltxt  += '      <key>highlight</key>\n';
+          kmltxt  += '      <styleUrl>#waypoint_h</styleUrl>\n';
+          kmltxt  += '    </Pair>\n';
+          kmltxt  += '  </StyleMap>\n';
+
+          kmltxt  += '  <Style id="lineStyle0">\n';
+          kmltxt  += '    <LineStyle>\n';
+          kmltxt  += '      <color>ffff0000</color>\n';
+          kmltxt  += '      <width>5</width>\n';
+          kmltxt  += '    </LineStyle>\n';
+          kmltxt  += '  </Style>\n';
+          kmltxt  += '  <Style id="lineStyle1">\n';
+          kmltxt  += '    <LineStyle>\n';
+          kmltxt  += '      <color>ffff0000</color>\n';
+          kmltxt  += '      <width>5</width>\n';
+          kmltxt  += '    </LineStyle>\n';
+          kmltxt  += '  </Style>\n';
+          kmltxt  += '  <StyleMap id="lineStyle">\n';
+          kmltxt  += '    <Pair>\n';
+          kmltxt  += '      <key>normal</key>\n';
+          kmltxt  += '      <styleUrl>#lineStyle1</styleUrl>\n';
+          kmltxt  += '    </Pair>\n';
+          kmltxt  += '    <Pair>\n';
+          kmltxt  += '      <key>highlight</key>\n';
+          kmltxt  += '      <styleUrl>#lineStyle0</styleUrl>\n';
+          kmltxt  += '    </Pair>\n';
+          kmltxt  += '  </StyleMap>\n';
           
-          kmltxt  += '\t\t\t\t\t';
+          kmltxt  += '  <Folder>\n';
+          kmltxt  += '    <name>' + dateString + '</name>\n';
+          kmltxt  += '    <open>1</open>\n';
+          
+          kmltxt  += '    <Placemark>\n';
+          kmltxt  += '      <name>Start, ' + grStart + '</name>\n';
+          kmltxt  += '      <styleUrl>#waypoint</styleUrl>\n';
+          kmltxt  += '      <Point>\n';
+          kmltxt  += '        <coordinates>' + startlon + ',' + startlat + ',0</coordinates>\n';
+          kmltxt  += '      </Point>\n';
+          kmltxt  += '    </Placemark>\n';
+          
+          kmltxt  += '    <Placemark>\n';
+          kmltxt  += '      <name>End, ' + grEnd + '</name>\n';
+          kmltxt  += '      <styleUrl>#waypoint</styleUrl>\n';
+          kmltxt  += '      <Point>\n';
+          kmltxt  += '        <coordinates>' + endlon + ',' + endlat + ',0</coordinates>\n';
+          kmltxt  += '      </Point>\n';
+          kmltxt  += '    </Placemark>\n';
+          
+          kmltxt  += '    <Placemark>\n';
+          kmltxt  += '      <name>Path Edit Me</name>\n';
+          kmltxt  += '      <styleUrl>#lineStyle</styleUrl>\n';
+          kmltxt  += '      <LineString>\n';
+          kmltxt  += '        <tessellate>1</tessellate>\n';
+          kmltxt  += '        <coordinates>\n';          
+          kmltxt  += '          ';
           for (ii = 0; ii < lineData.length; ii++) {
             var lon = Math.round(lineData[ii].longitude * 1000000) / 1000000;
             var lat = Math.round(lineData[ii].latitude  * 1000000) / 1000000;
             kmltxt += lon + ',' + lat + ' ';                          
-          }
-          
-          kmltxt += '\t\t\t\t</coordinates>\n';
-          kmltxt += '\t\t\t</LineString>\n';
-          kmltxt += '\t\t</Placemark>\n';
-          kmltxt += '\t\t<Placemark>\n';
-          kmltxt += '\t\t\t<name>Start, ' + grStart + '</name>\n';
-          kmltxt += '\t\t\t<styleUrl>#waypoint</styleUrl>\n';
-          kmltxt += '\t\t\t<Point>\n';
-          kmltxt += '\t\t\t\t<coordinates>' + startlon + ',' + startlat + ',0</coordinates>\n';
-          kmltxt += '\t\t\t</Point>\n';
-          kmltxt += '\t\t</Placemark>\n';
-          kmltxt += '\t\t<Placemark>\n';
-          kmltxt += '\t\t\t<name>End, ' + grEnd + '</name>\n';
-          kmltxt += '\t\t\t<styleUrl>#waypoint</styleUrl>\n';
-          kmltxt += '\t\t\t<Point>\n';
-          kmltxt += '\t\t\t\t<coordinates>' + endlon + ',' + endlat + ',0</coordinates>\n';
-          kmltxt += '\t\t\t</Point>\n';
-          kmltxt += '\t\t</Placemark>\n';
-          kmltxt += '\t</Folder>\n';
-          kmltxt += '</Document>\n';
-          kmltxt += '</kml>\n';     
+          }          
+          kmltxt  += '\n        </coordinates>\n';
+          kmltxt  += '      </LineString>\n';
+          kmltxt  += '    </Placemark>\n';
+          kmltxt  += '  </Folder>\n';
+          kmltxt  += '</Document>\n';
+          kmltxt  += '</kml>\n';     
           
       //console.log(lineData);
       //console.log(lineData.length);
@@ -375,16 +385,6 @@
       document.getElementById('length').value         =  length;
       document.getElementById('showLength').innerHTML =  length;
       document.getElementById('filename').value       =  dateString;
-    }
-    
-    function showMAP() {
-      document.getElementById("myMap").style.display        = "block";
-      document.getElementById("but_help").style.display     = "inline";
-      document.getElementById("but_info").style.display     = "inline";
-      document.getElementById("but_GPXtrack").style.display = "inline";
-    //document.getElementById("but_GPXroute").style.display = "inline";
-      document.getElementById("but_KML").style.display      = "inline";
-      document.getElementById("myDat").style.display        = "none";
     }
     
     function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
@@ -437,7 +437,7 @@
       
       var length = getWalkLength(lineData);
           length = Math.round(length  * 100) / 100;
-          length = "<b>Walk Length: </b>" + length + " km" + " - " + Math.round(0.621371 * length * 100) / 100 + " miles.";
+          length = "<b>Distance: </b>" + length + " km" + " &nbsp; " + Math.round(0.621371 * length * 100) / 100 + " miles.";
           
       var startlat = Math.round(lineData[0].latitude  * 1000000) / 1000000;
       var startlon = Math.round(lineData[0].longitude * 1000000) / 1000000;
@@ -454,25 +454,25 @@
       mymap.entities.clear();    // No idea why this cleans the clutter but is seems to !!!!!
     }
   </script>
-  <script src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=ArnZSzoMSvXE9JZUGWaaqQ55jl4eVWlsA4Rzt2FY6mU0diTVUGXY10nB5SdMzRzE' async defer></script>
+  <script src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=Put your own Bing Maps Key here' async defer></script>
   <script src="js/geotools.js"></script>
+  <!-- Get GeoTools from:  http://www.nearby.org.uk/tests/GeoTools.html -->
 </head>
 <body>
     <div id="myMap" style="position:absolute;width:99%;height:99%;"></div>
     <div id="myDat" style="position:absolute;width:99%;height:99%; display:none;">
       <form action="gpx_form.php" method="post">
         <textarea name="gpx_data" id="gpxDAT" style="position:relative;width:98vw;height:70vh"></textarea>
-        <!-- <textarea name="gpx_data" id="gpxDAT" style="position:relative; left:10px; right:10px; top:10px; botton:50px;></textarea> -->
         <input id="length"      name="length"   type="hidden">
         <input id="KmlGpx"      name="KmlGpx"   type="hidden">
         <input id="filename"    name="filename" type="hidden">
         <p id="showLength"></p>
-        <p><input type="submit" name="Submit"   id="but_DAT" value="Download GPX / KML"> &nbsp; &nbsp; &nbsp; &nbsp;<input id="but_MAP" type="button" value="Return to Map" onclick="showMAP()"/></p>
+        <p><input type="submit" name="Submit"   id="but_DAT" value="Download GPX / KML"> &nbsp; &nbsp; &nbsp; &nbsp;<input id="but_MAP" type="button" value="Return to Map" onclick="showMap()"/></p>
       </form>
     </div>
     <div style="position:absolute; top:15px; left:15px;">
       <input id="but_GPXtrack" type="button" value="Save GPX Track" onclick="saveGPXtrack()"/>
-      <!-- <input id="but_GPXroute" type="button" value="Save GPX Route" onclick="saveGPXroute()"/> -->
+      <input id="but_GPXroute" type="button" value="Save GPX Route" onclick="saveGPXroute()"/>
       <input id="but_KML"      type="button" value="Save KML"       onclick="saveKML()"/>
       <span id="but_info" style="background-color:#ffffff">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
       <span id="but_help" style="background-color:#ffffff"><b>&nbsp; &nbsp; &nbsp;<a style="text-decoration:none" href="/gpx_maker_help.php" target="_blank">HELP</a>&nbsp; &nbsp; &nbsp;</b></span>
