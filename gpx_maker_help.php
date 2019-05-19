@@ -3,11 +3,10 @@
 <head>
   <title>GPX and KML Drawing Tool</title>
   <meta charset="utf-8" />
-  <link href="/css/wavram.css" rel="stylesheet" type="text/css">
 </head>
 <body style="font-size:105%">
 <h1>Waveney Ramblers GPX and KML Drawing Tool</h1>
-<p>Launch the <a href="/gpx_maker.php?lat=52.4&lon=1.5">GPX Maker</a> near 52,4, 1.5 or at co-ordinates near your home area.</p>
+<p>Launch the <a style="text-decoration:none" href="/gpx_maker.php?lat=52.4&lon=1.5">GPX Maker</a> near 52,4, 1.5 or at co-ordinates near your home area.</p>
 <p>Make a web browser bookmark or shortcut to launch the GPX Maker. It should look like this ...</p>
 <p style="font-family:Courier New, Courier, monospace">&nbsp; &nbsp; <b>http://waveneyramblers.org.uk/gpx_maker.php?lat=52.4&lon=1.5 </b></p>
 <p>Alter the numbers next to "lat" and "lon" to centre the map near your home location. Waveney is near 52,4, 1.5.</p>
@@ -33,13 +32,16 @@ This makes it more obvious on the GPS display.</li>
 <h2>Bugs and Features</h2>
 <p>Please report bugs or request features by emailing Neil at nbauers@btinternet.com</p>
 <h2>Copyright</h2>
-<p>&copy; This application and the included <a href="http://www.nearby.org.uk/tests/GeoTools.html" target="_blank">geotools.js</a> are licenced under the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General Public Licence.</a></p>
+<p>&copy; This application and the included <a style="text-decoration:none" href="http://www.nearby.org.uk/tests/GeoTools.html" target="_blank">geotools.js</a> are licenced under the <a style="text-decoration:none" href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General Public Licence.</a></p>
 <h2>Disclaimer</h2>
 <ul>
 <li>This application is provided 'as is' with no guarantees.</li>
 <li>Routes prepared with this application can be used for navigation and uploaded to a handheld GPS Unit.</li>
 <li>Please verify the routes are correct (including accurately transferred to a GPS unit) before using them for Navigation.</li>
 <li>It's your responsibility, as nearly as possible, to plan legal routes using rights of way.</li>
+</ul>
+<h2>Github</h2>
+<p><a style="text-decoration:none" href="https://github.com/nbauers/GPX-and-KML-OS-Map-Walk-Planner" target="_blank">View on Github</a></p>
 </ul>
 </body>
 </html>
