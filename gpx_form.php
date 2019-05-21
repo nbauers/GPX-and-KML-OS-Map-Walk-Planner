@@ -1,5 +1,4 @@
 <?php
-
   if ($_POST['KmlGpx'] == "gpx_track") {
     header('Content-type: application/gpx+xml');
     header("Content-Disposition: attachment; filename=\"" . $_POST['filename']. ".t.gpx");  
