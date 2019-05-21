@@ -9,7 +9,7 @@
     var mymap;
 
     function GetMap() {
-        mymap = new Microsoft.Maps.Map('#myMap', { credentials: 'ArnZSzoMSvXE9JZUGWaaqQ55jl4eVWlsA4Rzt2FY6mU0diTVUGXY10nB5SdMzRzE' });
+        mymap = new Microsoft.Maps.Map('#myMap', { credentials: 'Your Bing Maps Key goes here' });
         
         // viewchangestart, viewchange, viewchangeend, click, dblclick, rightclick
         // mousedown, mouseout, mouseover, mouseup, mousewheel, maptypechanged
@@ -574,7 +574,7 @@
       showMap();
     }    
   </script>
-  <script src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=ArnZSzoMSvXE9JZUGWaaqQ55jl4eVWlsA4Rzt2FY6mU0diTVUGXY10nB5SdMzRzE' async defer></script>
+  <script src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=Your Bing Maps Key goes here' async defer></script>
   <script src="js/geotools.js"></script>    <!-- Get GeoTools from:  http://www.nearby.org.uk/tests/GeoTools.html -->
 </head>
 <body>
