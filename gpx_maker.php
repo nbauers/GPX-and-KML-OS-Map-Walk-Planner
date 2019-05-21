@@ -9,7 +9,7 @@
     var mymap;
 
     function GetMap() {
-        mymap = new Microsoft.Maps.Map('#myMap', { credentials: 'Put your Bing Maps Key here' });
+        mymap = new Microsoft.Maps.Map('#myMap', { credentials: 'ArnZSzoMSvXE9JZUGWaaqQ55jl4eVWlsA4Rzt2FY6mU0diTVUGXY10nB5SdMzRzE' });
         
         // viewchangestart, viewchange, viewchangeend, click, dblclick, rightclick
         // mousedown, mouseout, mouseover, mouseup, mousewheel, maptypechanged
@@ -496,6 +496,7 @@
       //mymap.entities.clear();
 
       var newcoords = [];
+      var minLat = 1000, minLon = 1000, maxLat = -1000, maxLon = -1000;
       
       var xmlSource = document.getElementById('gpxIMP').value;
           xmlSource = xmlSource.trim();
@@ -511,6 +512,10 @@
         var ll = xx[ii]; 
         console.log('Lat = ' + ll.attributes[0].value);
         console.log('Lon = ' + ll.attributes[1].value);
+        if (ll.attributes[0].value < minLat) { minLat = ll.attributes[0].value; }
+        if (ll.attributes[1].value < minLon) { minLon = ll.attributes[1].value; }
+        if (ll.attributes[0].value > maxLat) { maxLat = ll.attributes[0].value; }
+        if (ll.attributes[1].value > maxLon) { maxLon = ll.attributes[1].value; }
         newcoords.push(new Microsoft.Maps.Location(ll.attributes[0].value, ll.attributes[1].value));
       }
 
@@ -520,6 +525,10 @@
         var ll = xx[ii]; 
         console.log('Lat = ' + ll.attributes[0].value);
         console.log('Lon = ' + ll.attributes[1].value);
+        if (ll.attributes[0].value < minLat) { minLat = ll.attributes[0].value; }
+        if (ll.attributes[1].value < minLon) { minLon = ll.attributes[1].value; }
+        if (ll.attributes[0].value > maxLat) { maxLat = ll.attributes[0].value; }
+        if (ll.attributes[1].value > maxLon) { maxLon = ll.attributes[1].value; }
         newcoords.push(new Microsoft.Maps.Location(ll.attributes[0].value, ll.attributes[1].value));
       }
 
@@ -538,6 +547,10 @@
           	var ll = llarray[ii].split(",");
           	console.log('Lat = ' + ll[1]);
           	console.log('Lon = ' + ll[0]);
+            if (ll[1] < minLat) { minLat = ll[1]; }
+            if (ll[0] < minLon) { minLon = ll[0]; }
+            if (ll[1] > maxLat) { maxLat = ll[1]; }
+            if (ll[0] > maxLon) { maxLon = ll[0]; }
           	newcoords.push(new Microsoft.Maps.Location(ll[1], ll[0]));
           }
         }
@@ -548,54 +561,29 @@
         //console.log();
       }
       
+      var centreLat = (minLat - - maxLat) / 2;
+      var centreLon = (minLon - - maxLon) / 2;
+      
+      console.log(minLat);
+      console.log(minLon);
+      console.log(maxLat);
+      console.log(maxLon);
+      console.log(centreLat);
+      console.log(centreLon);
+      
       polyline.setLocations(newcoords);
       
       mymap.setView({
-        zoom: 11
+        mapTypeId: Microsoft.Maps.MapTypeId.ordnanceSurvey,
+        center: new Microsoft.Maps.Location(centreLat, centreLon),
+        zoom: 12
       });        
       
+      userFeedback();
       showMap();
-
-      //polyline = new Microsoft.Maps.Polyline(newcoords, {
-      //    strokeColor: 'blue',
-      //    strokeThickness: 4
-      //});
-      //mymap.entities.push(polyline);
-
-      
-      // console.log(newcoords);
-      // polyline.setLocations(newcoords);
-      
-      //mymap.setView({
-      //  mapTypeId: Microsoft.Maps.MapTypeId.ordnanceSurvey,
-      //  center: new Microsoft.Maps.Location(urlArr[0], urlArr[1]),
-      //  zoom: 12
-      //});        
-
-      // mymap.entities.clear();
-      
-      //var co = ls.getElementsByTagName('coordinates');
-      //console.log(ls);
-      //console.log(co);
-      //console.log(xx[0].childNodes[3].innerHTML);
-      
-      //for (var ii = 0; ii < xx.length; ii++) {
-      //  var ll = xx[ii]; 
-      //  console.log('Lat = ' + ll.attributes[0].value);
-      //  console.log('Lon = ' + ll.attributes[1].value);
-      //}
-
-      //console.log(ll.attributes[1]);
-      //console.log(typeof(ll.attributes[1]));
-      //console.log(ll.attributes[1].value);
-      // for (var name in ll.attributes[1]) { console.log(name); }
-      // var ar = ll.split('lat');
-      //console.log(ll);
-      //for (var name in ll) { console.log(name); }
-      
     }    
   </script>
-  <script src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=Put your Bing Maps Key here' async defer></script>
+  <script src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=ArnZSzoMSvXE9JZUGWaaqQ55jl4eVWlsA4Rzt2FY6mU0diTVUGXY10nB5SdMzRzE' async defer></script>
   <script src="js/geotools.js"></script>    <!-- Get GeoTools from:  http://www.nearby.org.uk/tests/GeoTools.html -->
 </head>
 <body>
