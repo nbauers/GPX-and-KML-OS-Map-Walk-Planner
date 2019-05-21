@@ -63,6 +63,18 @@
       return s;
     }
     
+    function myDate() {    // Local date and time
+      var date = new Date();
+      var dateString  =           date.getFullYear(   );
+          dateString += '-' + pad(date.getMonth(),   2);
+          dateString += '-' + pad(date.getDate(),    2);
+          dateString += 'T' + pad(date.getHours(),   2);
+          dateString += '-' + pad(date.getMinutes(), 2);
+          dateString += '-' + pad(date.getSeconds(), 2);
+          
+      return dateString;
+    }
+    
     function saveGPXtrack() {
       hideMap();
       showSave();
@@ -74,14 +86,7 @@
           length = "<b>Distance: </b>" + length + " km" + " &nbsp; " + Math.round(0.621371 * length * 100) / 100 + " miles.";
           // console.log(length);
       
-      var date = new Date();
-      var dateString  = date.getFullYear();
-          dateString += '-' + pad(date.getMonth(), 2);
-          dateString += '-' + pad(date.getDate(), 2);
-          dateString += 'T' + pad(date.getHours(),  2);
-          dateString += ':' + pad(date.getMinutes(),  2);
-          dateString += ':' + pad(date.getSeconds(),  2);
-          dateString += '.' + pad(date.getMilliseconds(),  2) + 'Z';
+      var dateString = myDate();
       
       var ii;
 
@@ -167,14 +172,7 @@
           length = "<b>Distance: </b>" + length + " km" + " &nbsp; " + Math.round(0.621371 * length * 100) / 100 + " miles.";
           // console.log(length);
       
-      var date = new Date();
-      var dateString  = date.getFullYear();
-          dateString += '-' + pad(date.getMonth(), 2);
-          dateString += '-' + pad(date.getDate(), 2);
-          dateString += 'T' + pad(date.getHours(),  2);
-          dateString += ':' + pad(date.getMinutes(),  2);
-          dateString += ':' + pad(date.getSeconds(),  2);
-          dateString += '.' + pad(date.getMilliseconds(),  2) + 'Z';
+      var dateString = myDate();
       
       var ii;
 
@@ -242,14 +240,7 @@
           length = "<b>Distance: </b>" + length + " km" + " &nbsp; " + Math.round(0.621371 * length * 100) / 100 + " miles.";
           // console.log(length);
       
-      var date = new Date();
-      var dateString  = date.getFullYear();
-          dateString += '-' + pad(date.getMonth(), 2);
-          dateString += '-' + pad(date.getDate(), 2);
-          dateString += 'T' + pad(date.getHours(),  2);
-          dateString += ':' + pad(date.getMinutes(),  2);
-          dateString += ':' + pad(date.getSeconds(),  2);
-          dateString += '.' + pad(date.getMilliseconds(),  2) + 'Z';
+      var dateString = myDate();
       
       var ii;
 
@@ -504,14 +495,14 @@
       var parser    = new DOMParser();
       var doc       = parser.parseFromString(xmlSource, "text/xml");	
     	
-      console.log(doc);
+      // console.log(doc);
       
       var xx = doc.getElementsByTagName('trkpt');
-      console.log(xx);
+      // console.log(xx);
       for (var ii = 0; ii < xx.length; ii++) {
         var ll = xx[ii]; 
-        console.log('Lat = ' + ll.attributes[0].value);
-        console.log('Lon = ' + ll.attributes[1].value);
+        // console.log('Lat = ' + ll.attributes[0].value);
+        // console.log('Lon = ' + ll.attributes[1].value);
         if (ll.attributes[0].value < minLat) { minLat = ll.attributes[0].value; }
         if (ll.attributes[1].value < minLon) { minLon = ll.attributes[1].value; }
         if (ll.attributes[0].value > maxLat) { maxLat = ll.attributes[0].value; }
@@ -520,11 +511,11 @@
       }
 
       var xx = doc.getElementsByTagName('rtept');
-      console.log(xx);
+      // console.log(xx);
       for (var ii = 0; ii < xx.length; ii++) {
         var ll = xx[ii]; 
-        console.log('Lat = ' + ll.attributes[0].value);
-        console.log('Lon = ' + ll.attributes[1].value);
+        // console.log('Lat = ' + ll.attributes[0].value);
+        // console.log('Lon = ' + ll.attributes[1].value);
         if (ll.attributes[0].value < minLat) { minLat = ll.attributes[0].value; }
         if (ll.attributes[1].value < minLon) { minLon = ll.attributes[1].value; }
         if (ll.attributes[0].value > maxLat) { maxLat = ll.attributes[0].value; }
@@ -540,13 +531,13 @@
         if (ll.parentElement.nodeName == 'LineString') {
           lonlat = ll.innerHTML.trim();
           llarray = lonlat.split(" ");
-          console.log(lonlat);
-          console.log(llarray);
+          // console.log(lonlat);
+          // console.log(llarray);
           
           for (var ii = 0; ii < llarray.length; ii++) {
           	var ll = llarray[ii].split(",");
-          	console.log('Lat = ' + ll[1]);
-          	console.log('Lon = ' + ll[0]);
+          	// console.log('Lat = ' + ll[1]);
+          	// console.log('Lon = ' + ll[0]);
             if (ll[1] < minLat) { minLat = ll[1]; }
             if (ll[0] < minLon) { minLon = ll[0]; }
             if (ll[1] > maxLat) { maxLat = ll[1]; }
@@ -564,12 +555,12 @@
       var centreLat = (minLat - - maxLat) / 2;
       var centreLon = (minLon - - maxLon) / 2;
       
-      console.log(minLat);
-      console.log(minLon);
-      console.log(maxLat);
-      console.log(maxLon);
-      console.log(centreLat);
-      console.log(centreLon);
+      // console.log(minLat);
+      // console.log(minLon);
+      // console.log(maxLat);
+      // console.log(maxLon);
+      // console.log(centreLat);
+      // console.log(centreLon);
       
       polyline.setLocations(newcoords);
       
