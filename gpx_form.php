@@ -15,6 +15,4 @@
   } else {
     echo "<h1>ERROR: Data type not recognised. Please contact Neil to get it fixed.</h1>";
   }
-
-  //  echo "<pre>" . str_replace("<", "&lt;", print_r($_POST, 1)) . "</pre>\n";
 ?>
